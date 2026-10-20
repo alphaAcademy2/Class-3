@@ -1,1 +1,137 @@
-
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لسان القرآن — الدرس الأول</title>
+<style>
+:root{--navy:#15354b;--teal:#087f8c;--bg:#f1f8fb;--green:#168448;--red:#c52c2c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--navy);font-family:Arial,"Noto Sans Malayalam",sans-serif}
+header{background:linear-gradient(120deg,#075985,#0b8b86);color:white;text-align:center;padding:22px 14px}
+.ar-title{font-family:"Noto Naskh Arabic","Amiri",serif;direction:rtl;font-size:38px;font-weight:bold}
+header h1{font-size:23px;margin:5px 0}
+header p{margin:5px 0 0}
+main{max-width:850px;margin:16px auto;padding:0 12px 32px}
+.summary,.section{background:white;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 4px 18px #17324d10}
+.stats{display:flex;flex-wrap:wrap;gap:9px;justify-content:space-between;font-weight:bold}
+.stat{background:#e8f6f5;border-radius:10px;padding:9px 12px}
+h2{font-size:19px;margin:0 0 10px}
+.question{border:1px solid #dce8ed;border-radius:13px;padding:14px;margin:11px 0}
+.qhead{display:flex;gap:10px;align-items:flex-start}
+.number{flex:0 0 30px;height:30px;display:grid;place-items:center;background:#e6f4f4;border-radius:9px;font-weight:bold}
+.qcontent{flex:1;min-width:0}
+.prompt{font-size:16px;line-height:1.7;font-weight:700}
+.arabic{font-family:"Noto Naskh Arabic","Amiri",serif;direction:rtl;text-align:right;font-size:25px;line-height:1.8}
+.fillrow{display:flex;direction:rtl;align-items:center;justify-content:flex-start;gap:8px;flex-wrap:wrap;font-family:"Noto Naskh Arabic","Amiri",serif;font-size:26px;line-height:1.8}
+.blank{display:inline-block;min-width:78px;border-bottom:2px dotted #6b8795;height:1.5em}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.option{position:relative;border:1.5px solid #cbd9e2;background:#fbfdff;border-radius:10px;padding:10px 35px 10px 10px;font-size:16px;cursor:pointer;text-align:center;min-height:48px;color:var(--navy)}
+.option.aropt{font-family:"Noto Naskh Arabic","Amiri",serif;font-size:23px;direction:rtl}
+.option:disabled{cursor:default;opacity:1}
+.option.correct{border-color:var(--green);background:#e5f8eb;color:#075e2d}
+.option.wrong{border-color:var(--red);background:#fff0f0;color:#941e1e}
+.light{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;border-radius:50%;background:#d8e0e4;border:1px solid #aab8bf}
+.correct .light{background:#21bd59;box-shadow:0 0 8px #21bd5980;border-color:#168448}
+.wrong .light{background:#f04444;box-shadow:0 0 8px #f0444480;border-color:#c52c2c}
+.feedback{font-weight:bold;font-size:14px;margin-top:9px;min-height:20px}
+.feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}
+button.reset{border:0;border-radius:10px;padding:12px 17px;background:#087f8c;color:white;font-size:16px;font-weight:bold;cursor:pointer}
+.end{text-align:center}
+@media(max-width:480px){.options{grid-template-columns:1fr 1fr}.question{padding:11px}.arabic{font-size:23px}.fillrow{font-size:24px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="ar-title">هَذَا قَلَمِي</div>
+ <h1>ലിസാനുൽ ഖുർആൻ — പാഠം 1</h1>
+</header>
+<main>
+ <section class="summary">
+  <div class="stats">
+   <span class="stat">ആകെ ചോദ്യങ്ങൾ: 20</span>
+   <span class="stat">ഉത്തരം ചെയ്തത്: <span id="answered">0</span> / 20</span>
+   <span class="stat">ശരിയുത്തരം: <span id="score">0</span></span>
+  </div>
+ </section>
+ <section class="section"><h2>പ്രവർത്തനം 1 — ശരിയായ പദം തിരഞ്ഞെടുക്കുക</h2><div id="g1"></div></section>
+ <section class="section"><h2>പ്രവർത്തനം 2 — സർവനാമം തിരഞ്ഞെടുക്കുക</h2><div id="g2"></div></section>
+ <section class="section"><h2>പ്രവർത്തനം 3 — ശരിയായ ചോദ്യപദം തിരഞ്ഞെടുക്കുക</h2><div id="g3"></div></section>
+ <section class="section"><h2>പ്രവർത്തനം 4 — അർഥവും വാക്യവും</h2><div id="g4"></div></section>
+ <section class="section end"><button class="reset" onclick="resetQuiz()">വീണ്ടും ചെയ്യുക</button></section>
+</main>
+<script>
+const groups=[
+{el:"g1",qs:[
+{type:"fill",before:"قَلَمِي",opts:["هَذَا","هَذِهِ","تِلْكَ","هِيَ"],correct:0,exp:"قَلَمِي പുല്ലിംഗപദമാണ്; അതിനാൽ هَذَا قَلَمِي."},
+{type:"fill",before:"هِرَّةٌ",opts:["هَذَا","هَذِهِ","ذَلِكَ","هُوَ"],correct:1,exp:"هِرَّةٌ സ്ത്രീലിംഗപദമാണ്; അടുത്തുള്ളതിന് هَذِهِ."},
+{type:"fill",before:"دِيكٌ (ദൂരെയുള്ളത്)",opts:["تِلْكَ","هَذِهِ","ذَلِكَ","هِيَ"],correct:2,exp:"ദൂരെയുള്ള പുല്ലിംഗത്തിന് ذَلِكَ."},
+{type:"fill",before:"دَجَاجَةٌ (ദൂരെയുള്ളത്)",opts:["ذَلِكَ","تِلْكَ","هَذَا","هُوَ"],correct:1,exp:"ദൂരെയുള്ള സ്ത്രീലിംഗത്തിന് تِلْكَ."},
+{type:"fill",before:"أُمِّي",opts:["هَذَا","هَذِهِ","ذَلِكَ","هُوَ"],correct:1,exp:"أُمِّي സ്ത്രീലിംഗപദമാണ്."},
+{type:"fill",before:"أَبِي",opts:["هَذِهِ","تِلْكَ","هَذَا","هِيَ"],correct:2,exp:"أَبِي പുല്ലിംഗപദമാണ്."}
+]},
+{el:"g2",qs:[
+{prompt:"‘ഞാൻ പഠിക്കുന്നു’ എന്നതിന് ശരിയായ പദം തിരഞ്ഞെടുക്കുക.",opts:["أَنَا دَارِسٌ","أَنْتَ دَارِسٌ","هِيَ دَارِسٌ","أَنْتِ دَارِسٌ"],correct:0,exp:"أَنَا = ഞാൻ."},
+{prompt:"ഒരു ആൺകുട്ടിയോട് ‘നീ പഠിക്കുന്നു’ എന്ന് പറയുമ്പോൾ:",opts:["أَنْتِ دَارِسٌ","أَنْتَ دَارِسٌ","هِيَ دَارِسَةٌ","أَنَا دَارِسٌ"],correct:1,exp:"ആൺകുട്ടിയോട് أَنْتَ ഉപയോഗിക്കുന്നു."},
+{prompt:"ഒരു പെൺകുട്ടിയോട് ‘നീ പഠിക്കുന്നു’ എന്ന് പറയുമ്പോൾ:",opts:["أَنْتَ دَارِسٌ","هُوَ دَارِسٌ","أَنْتِ دَارِسَةٌ","أَنَا دَارِسٌ"],correct:2,exp:"പെൺകുട്ടിയോട് أَنْتِ ഉപയോഗിക്കുന്നു."},
+{prompt:"‘അവൾ’ എന്നതിന് ശരിയായ അറബി പദം ഏത്?",opts:["هُوَ","هِيَ","أَنَا","أَنْتَ"],correct:1,exp:"هِيَ = അവൾ."},
+{prompt:"‘അവൻ’ എന്നതിന് ശരിയായ അറബി പദം ഏത്?",opts:["هِيَ","أَنْتِ","هُوَ","أَنَا"],correct:2,exp:"هُوَ = അവൻ."}
+]},
+{el:"g3",qs:[
+{prompt:"........ الهِرَّةُ؟ (പൂച്ച എവിടെ?)",opts:["مَا","أَيْنَ","مَنْ","هُوَ"],correct:1,exp:"സ്ഥലം ചോദിക്കാൻ أَيْنَ ഉപയോഗിക്കുന്നു."},
+{prompt:"........ هَذَا؟ (ഇത് ആര്?)",opts:["مَنْ","أَيْنَ","فِي","عَلَى"],correct:0,exp:"ആളെക്കുറിച്ച് ചോദിക്കാൻ مَنْ؟"},
+{prompt:"........ ذَلِكَ؟ (അത് എന്താണ്?)",opts:["أَيْنَ","مَنْ","مَا","هِيَ"],correct:2,exp:"വസ്തുവിനെക്കുറിച്ച് ചോദിക്കാൻ مَا؟"},
+{prompt:"........ الكِتَابُ؟ (പുസ്തകം എവിടെ?)",opts:["مَا","أَيْنَ","مَنْ","هَذَا"],correct:1,exp:"أَيْنَ = എവിടെ?"},
+{prompt:"........ صَدِيقُكَ؟ (നിന്റെ സുഹൃത്ത് ആര്?)",opts:["مَنْ","مَا","أَيْنَ","تِلْكَ"],correct:0,exp:"ആരെന്ന് ചോദിക്കാൻ مَنْ؟"}
+]},
+{el:"g4",qs:[
+{prompt:"‘ഇത് എന്റെ പേനയാണ്’ എന്നതിന് ശരിയായ വാക്യം തിരഞ്ഞെടുക്കുക.",opts:["هَذَا قَلَمِي","هَذِهِ قَلَمِي","تِلْكَ قَلَمِي","هِيَ قَلَمِي"],correct:0,exp:"هَذَا قَلَمِي = ഇതാണ് എന്റെ പേന."},
+{prompt:"‘അത് ഒരു പുസ്തകമാണ്’ എന്നതിന് ശരിയായ വാക്യം:",opts:["هَذِهِ كِتَابٌ","ذَلِكَ كِتَابٌ","هِيَ كِتَابٌ","تِلْكَ قَلَمٌ"],correct:1,exp:"ذَلِكَ كِتَابٌ = അത് ഒരു പുസ്തകമാണ്."},
+{prompt:"فِي എന്നതിന്റെ അർഥം ഏത്?",opts:["മുകളിൽ","ഉള്ളിൽ / ൽ","ആര്?","എന്ത്?"],correct:1,exp:"فِي = ഉള്ളിൽ / ൽ."},
+{prompt:"عَلَى എന്നതിന്റെ അർഥം ഏത്?",opts:["ഉള്ളിൽ","എവിടെ?","മുകളിൽ","അവൾ"],correct:2,exp:"عَلَى = മുകളിൽ."}
+]}
+];
+let selected={},done={};
+function isArabic(s){return /[\u0600-\u06FF]/.test(s)}
+function makePrompt(q){
+ if(q.type==="fill") return `<div class="fillrow"><span class="blank" aria-label="ഉത്തരം നൽകാനുള്ള സ്ഥലം"></span><span>${q.before}</span></div>`;
+ if(q.prompt.startsWith("........")) {
+  const rest=q.prompt.replace(/^\\.\\.\\.\\.\\.\\.\\.\\.\\s*/,"");
+  return `<div class="fillrow"><span class="blank"></span><span>${rest}</span></div>`;
+ }
+ return `<div class="${isArabic(q.prompt)?'arabic':'prompt'}">${q.prompt}</div>`;
+}
+function render(){
+ groups.forEach((g,gi)=>{
+  const root=document.getElementById(g.el);root.innerHTML="";
+  g.qs.forEach((q,qi)=>{
+   const id=gi+"_"+qi,card=document.createElement("div");card.className="question";
+   card.innerHTML=`<div class="qhead"><div class="number">${gi===0?qi+1:gi===1?qi+7:gi===2?qi+12:qi+17}</div><div class="qcontent">${makePrompt(q)}<div class="options">${q.opts.map((op,oi)=>`<button class="option ${isArabic(op)?'aropt':''}" data-id="${id}" data-choice="${oi}"><span class="light"></span><span>${op}</span></button>`).join("")}</div><div class="feedback" aria-live="polite"></div></div></div>`;
+   root.appendChild(card);
+   if(done[id]) showResult(id,card,q);
+  });
+ });
+ document.querySelectorAll(".option").forEach(btn=>btn.addEventListener("click",()=>{
+  const id=btn.dataset.id;if(done[id])return;
+  selected[id]=Number(btn.dataset.choice);done[id]=true;
+  const card=btn.closest(".question");const [gi,qi]=id.split("_").map(Number);
+  showResult(id,card,groups[gi].qs[qi]);updateStats();
+ }));
+ updateStats();
+}
+function showResult(id,card,q){
+ const choice=selected[id],buttons=[...card.querySelectorAll(".option")];
+ buttons.forEach((b,i)=>{b.disabled=true;if(i===q.correct)b.classList.add("correct");if(i===choice&&choice!==q.correct)b.classList.add("wrong");});
+ const fb=card.querySelector(".feedback");
+ if(choice===q.correct){fb.textContent="🟢 ശരിയുത്തരം! "+q.exp;fb.className="feedback good";}
+ else{fb.textContent="🔴 തെറ്റായ ഉത്തരം. ശരിയായ ഉത്തരം: "+q.opts[q.correct]+". "+q.exp;fb.className="feedback bad";}
+}
+function updateStats(){
+ document.getElementById("answered").textContent=Object.keys(done).length;
+ document.getElementById("score").textContent=Object.keys(done).filter(id=>{const [g,q]=id.split("_").map(Number);return selected[id]===groups[g].qs[q].correct;}).length;
+}
+function resetQuiz(){selected={};done={};render();window.scrollTo({top:0,behavior:"smooth"});}
+render();
+</script>
+</body>
+</html>
