@@ -1,1 +1,115 @@
 
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ക്ലാസ് 3 — ലിസാനുൽ ഖുർആൻ | പാഠം 7</title>
+<style>
+:root{--navy:#173b67;--blue:#2878c8;--sky:#eaf5ff;--yellow:#ffe27a;--green:#16845b;--red:#c64242;--ink:#182538;--muted:#5d6b7b;--card:#fff;--line:#d7e3ef}
+*{box-sizing:border-box}body{margin:0;background:#f2f7fc;color:var(--ink);font-family:system-ui,"Noto Sans Malayalam","Noto Sans Arabic",sans-serif}
+header{background:linear-gradient(135deg,#174578,#328bd1);color:#fff;padding:22px 16px;text-align:center}
+header h1{font-size:clamp(22px,4vw,32px);margin:0 0 6px}header p{margin:0;font-size:15px}
+main{max-width:1000px;margin:0 auto;padding:18px 12px 40px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:16px;box-shadow:0 4px 14px #173b670b}
+h2{font-size:21px;margin:0 0 12px;color:var(--navy)}
+.lesson-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.lesson{border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px;text-align:left;cursor:pointer;min-height:88px;color:var(--ink)}
+.lesson:hover,.lesson.active{border-color:var(--blue);background:var(--sky)}
+.lesson .num{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--yellow);font-weight:800;margin-right:7px}
+.lesson .mltitle{font-weight:750;display:block;margin:8px 0 3px}
+.lesson .arabic{font-family:"Noto Naskh Arabic","Amiri",serif;font-size:18px;direction:rtl;color:#a34b26}
+#workArea{display:none}
+.topline{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.pill{background:#e4f4eb;color:#176b4c;border-radius:99px;padding:6px 10px;font-weight:700;font-size:13px}
+.progress{height:10px;background:#e4ebf2;border-radius:99px;overflow:hidden;margin:10px 0 15px}.bar{height:100%;width:0;background:#22a06b;transition:width .2s}
+.question{border:1px solid var(--line);border-radius:15px;padding:15px;margin:12px 0;background:#fff}
+.qnum{color:var(--blue);font-weight:800;font-size:13px}
+.prompt{font-size:17px;font-weight:750;margin:7px 0 12px;line-height:1.6}
+.ml{font-family:"Noto Naskh Arabic","Amiri",serif;direction:rtl;text-align:right;font-size:23px;line-height:1.8}
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px}
+.option{border:1px solid #cad8e7;border-radius:10px;padding:10px;background:#fafdff;cursor:pointer;font-size:16px;min-height:45px}
+.option:hover{border-color:var(--blue);background:#edf6ff}.option.correct{background:#baf2ce!important;border:2px solid #16845b!important;color:#105b37!important}.option.wrong{background:#ffcaca!important;border:2px solid #c64242!important;color:#8d1717!important}.option:disabled{cursor:default;opacity:1}
+.feedback{font-weight:700;margin-top:10px;min-height:24px}.feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+button.primary,button.secondary{border:0;border-radius:11px;padding:11px 16px;font-weight:750;font-size:15px;cursor:pointer}
+.primary{background:var(--blue);color:#fff}.secondary{background:#e8eef5;color:#243b55}
+#result{font-size:17px;font-weight:800;margin-top:10px}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:12px}
+@media(max-width:480px){main{padding:12px 9px 30px}.panel{padding:12px}.prompt{font-size:16px}.ml{font-size:21px}}
+</style>
+</head>
+<body>
+<header><h1>🌟 لسان القرآن</h1></header>
+<main>
+<section class="panel"><h2>📚 പാഠങ്ങൾ</h2><div class="lesson-grid" id="lessonList"></div></section>
+<section class="panel" id="workArea">
+<div class="topline"><div><h2 id="lessonHeading"></h2><div class="arabic" id="topicHeading"></div></div><span class="pill" id="scorePill">0 / 0 ശരി</span></div>
+<div class="progress"><div class="bar" id="progressBar"></div></div>
+<div id="questions"></div>
+<div class="actions"><button class="primary" onclick="checkAll()">ഫലം പരിശോധിക്കാം ✓</button><button class="secondary" onclick="resetLesson()">വീണ്ടും ചെയ്യാം ↻</button><button class="secondary" onclick="nextLesson()">അടുത്ത പാഠം →</button></div>
+<div id="result"></div></section></main>
+<footer>HIMAYATHUL ISLAM MADRASA - NADUVATHUR | ക്ലാസ് 3 • പാഠം 7</footer>
+<script>
+const lessons = [
+{title:"ഇരുപത് ക്ഷമാശീലർ", ar:"عِشْرُونَ صَابِرُونَ", topic:"الأعداد من ١ إلى ٢٠ — അറബി സംഖ്യകൾ 1 മുതൽ 20 വരെ", qs:[
+["١ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","وَاحِدٌ","اثْنَانِ","ثَلَاثَةٌ","أَرْبَعَةٌ",0,"وَاحِدٌ = ഒന്ന് (1)."],
+["٢ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","وَاحِدٌ","اثْنَانِ","خَمْسَةٌ","سِتَّةٌ",1,"اثْنَانِ = രണ്ട് (2)."],
+["٣ എന്ന സംഖ്യ തിരഞ്ഞെടുക്കൂ.","أَرْبَعَةٌ","خَمْسَةٌ","ثَلَاثَةٌ","سَبْعَةٌ",2,"ثَلَاثَةٌ = മൂന്ന് (3)."],
+["٤ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","أَرْبَعَةٌ","ثَمَانِيَةٌ","تِسْعَةٌ","عَشَرَةٌ",0,"أَرْبَعَةٌ = നാല് (4)."],
+["٥ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","سِتَّةٌ","خَمْسَةٌ","سَبْعَةٌ","ثَلَاثَةٌ",1,"خَمْسَةٌ = അഞ്ച് (5)."],
+["٦ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","خَمْسَةٌ","تِسْعَةٌ","سِتَّةٌ","ثَمَانِيَةٌ",2,"سِتَّةٌ = ആറ് (6)."],
+["٧ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","سَبْعَةٌ","ثَلَاثَةٌ","وَاحِدٌ","عَشَرَةٌ",0,"سَبْعَةٌ = ഏഴ് (7)."],
+["٨ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","تِسْعَةٌ","ثَمَانِيَةٌ","سِتَّةٌ","أَرْبَعَةٌ",1,"ثَمَانِيَةٌ = എട്ട് (8)."],
+["٩ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","سَبْعَةٌ","عَشَرَةٌ","تِسْعَةٌ","اثْنَانِ",2,"تِسْعَةٌ = ഒമ്പത് (9)."],
+["١٠ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","عَشَرَةٌ","أَحَدَ عَشَرَ","اثْنَا عَشَرَ","عِشْرُونَ",0,"عَشَرَةٌ = പത്ത് (10)."],
+["١١ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","اثْنَا عَشَرَ","أَحَدَ عَشَرَ","ثَلَاثَةَ عَشَرَ","عِشْرُونَ",1,"أَحَدَ عَشَرَ = പതിനൊന്ന് (11)."],
+["١٢ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","عَشَرَةٌ","أَحَدَ عَشَرَ","اثْنَا عَشَرَ","أَرْبَعَةَ عَشَرَ",2,"اثْنَا عَشَرَ = പന്ത്രണ്ട് (12)."],
+["١٣ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","ثَلَاثَةَ عَشَرَ","خَمْسَةَ عَشَرَ","سِتَّةَ عَشَرَ","سَبْعَةَ عَشَرَ",0,"ثَلَاثَةَ عَشَرَ = പതിമൂന്ന് (13)."],
+["١٤ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","ثَمَانِيَةَ عَشَرَ","أَرْبَعَةَ عَشَرَ","تِسْعَةَ عَشَرَ","اثْنَا عَشَرَ",1,"أَرْبَعَةَ عَشَرَ = പതിനാല് (14)."],
+["١٥ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","ثَلَاثَةَ عَشَرَ","سِتَّةَ عَشَرَ","خَمْسَةَ عَشَرَ","عِشْرُونَ",2,"خَمْسَةَ عَشَرَ = പതിനഞ്ച് (15)."],
+["١٦ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","سِتَّةَ عَشَرَ","سَبْعَةَ عَشَرَ","تِسْعَةَ عَشَرَ","عَشَرَةٌ",0,"سِتَّةَ عَشَرَ = പതിനാറ് (16)."],
+["١٧ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","خَمْسَةَ عَشَرَ","سَبْعَةَ عَشَرَ","ثَمَانِيَةَ عَشَرَ","أَحَدَ عَشَرَ",1,"سَبْعَةَ عَشَرَ = പതിനേഴ് (17)."],
+["١٨ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","تِسْعَةَ عَشَرَ","سِتَّةَ عَشَرَ","ثَمَانِيَةَ عَشَرَ","اثْنَا عَشَرَ",2,"ثَمَانِيَةَ عَشَرَ = പതിനെട്ട് (18)."],
+["١٩ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","تِسْعَةَ عَشَرَ","عِشْرُونَ","أَرْبَعَةَ عَشَرَ","سَبْعَةَ عَشَرَ",0,"تِسْعَةَ عَشَرَ = പത്തൊമ്പത് (19)."],
+["٢٠ എന്ന സംഖ്യയുടെ അറബി പദം ഏത്?","عَشَرَةٌ","عِشْرُونَ","أَحَدَ عَشَرَ","ثَمَانِيَةَ عَشَرَ",1,"عِشْرُونَ = ഇരുപത് (20)."],
+["‘إِنِّي رَأَيْتُ أَحَدَ عَشَرَ كَوْكَبًا’ എന്നതിന്റെ അർത്ഥം ഏത്?","ഞാൻ പത്ത് നക്ഷത്രങ്ങൾ കണ്ടു.","ഞാൻ പതിനൊന്ന് നക്ഷത്രങ്ങൾ കണ്ടു.","ഞാൻ പന്ത്രണ്ട് നക്ഷത്രങ്ങൾ കണ്ടു.","ഞാൻ ഇരുപത് നക്ഷത്രങ്ങൾ കണ്ടു.",1,"أَحَدَ عَشَرَ كَوْكَبًا = പതിനൊന്ന് നക്ഷത്രങ്ങൾ."],
+["‘إِنَّ عِدَّةَ الشُّهُورِ عِنْدَ اللهِ اثْنَا عَشَرَ شَهْرًا’ എന്നതിൽ മാസങ്ങളുടെ എണ്ണം എത്ര?","പത്ത്","പതിനൊന്ന്","പന്ത്രണ്ട്","പതിമൂന്ന്",2,"اثْنَا عَشَرَ شَهْرًا = പന്ത്രണ്ട് മാസം."],
+["‘فِي الصَّفِّ ثَلَاثَةَ عَشَرَ دَارِسًا’ എന്നതിന്റെ അർത്ഥം ഏത്?","ക്ലാസിൽ പതിമൂന്ന് വിദ്യാർത്ഥികളുണ്ട്.","ക്ലാസിൽ പതിനാല് വിദ്യാർത്ഥികളുണ്ട്.","ക്ലാസിൽ പതിനഞ്ച് വിദ്യാർത്ഥികളുണ്ട്.","ക്ലാസിൽ ഇരുപത് വിദ്യാർത്ഥികളുണ്ട്.",0,"ثَلَاثَةَ عَشَرَ دَارِسًا = പതിമൂന്ന് വിദ്യാർത്ഥികൾ."],
+["‘عَلَى الطَّاوِلَةِ ثَمَانِيَةَ عَشَرَ كِتَابًا’ — മേശപ്പുറത്ത് എത്ര പുസ്തകങ്ങൾ?","പതിനാറ്","പതിനേഴ്","പതിനെട്ട്","പത്തൊമ്പത്",2,"ثَمَانِيَةَ عَشَرَ كِتَابًا = പതിനെട്ട് പുസ്തകങ്ങൾ."],
+["‘إِنْ يَكُنْ مِنْكُمْ عِشْرُونَ صَابِرُونَ’ എന്നതിലെ عِشْرُونَ എന്നതിന്റെ അർത്ഥം?","പത്ത്","പതിനഞ്ച്","പത്തൊമ്പത്","ഇരുപത്",3,"عِشْرُونَ = ഇരുപത്; صَابِرُونَ = ക്ഷമാശീലർ."],
+["‘لِلصَّلَاةِ أَرْبَعَةَ عَشَرَ فَرْضًا’ — أَرْبَعَةَ عَشَرَ എന്നതിന്റെ അർത്ഥം?","പന്ത്രണ്ട്","പതിമൂന്ന്","പതിനാല്","പതിനഞ്ച്",2,"أَرْبَعَةَ عَشَرَ = പതിനാല്."],
+["‘فِي الْكِتَابِ سِتَّةَ عَشَرَ دَرْسًا’ — പുസ്തകത്തിൽ എത്ര പാഠങ്ങൾ?","പതിനാറ്","പതിനേഴ്","പതിനെട്ട്","പത്തൊമ്പത്",0,"سِتَّةَ عَشَرَ دَرْسًا = പതിനാറ് പാഠങ്ങൾ."],
+["‘فِي السَّلَّةِ سَبْعَةَ عَشَرَ مَانْجًا’ — കൊട്ടയിൽ എത്ര മാങ്ങകൾ?","പതിനഞ്ച്","പതിനേഴ്","പതിനെട്ട്","പത്തൊമ്പത്",1,"سَبْعَةَ عَشَرَ = പതിനേഴ്."],
+["‘عَلَى الشَّجَرَةِ خَمْسَةَ عَشَرَ طَائِرًا’ — മരത്തിൽ എത്ര പക്ഷികൾ?","പതിമൂന്ന്","പതിനാല്","പതിനഞ്ച്","പതിനാറ്",2,"خَمْسَةَ عَشَرَ طَائِرًا = പതിനഞ്ച് പക്ഷികൾ."],
+["‘عَلَيْهَا تِسْعَةَ عَشَرَ’ എന്നതിലെ തൊണ്ണൂറല്ലാത്ത സംഖ്യ ഏത്?","പത്തൊമ്പത്","പതിനെട്ട്","പതിനേഴ്","ഇരുപത്",0,"تِسْعَةَ عَشَرَ = പത്തൊമ്പത് (19)."]]}
+];
+let current=0, answers={}, checked={};
+const $=id=>document.getElementById(id);
+function renderLessons(){ $('lessonList').innerHTML=lessons.map((l,i)=>`<button class="lesson ${i===current?'active':''}" onclick="openLesson(${i})"><span class="num">${i+1}</span><b>പാഠം ${i+1}</b><span class="mltitle">${l.title}</span><span class="arabic">${l.ar}</span></button>`).join('');}
+function openLesson(i){current=i;answers={};checked={};renderLessons();$('workArea').style.display='block';$('lessonHeading').textContent=`പാഠം ${i+1} — ${lessons[i].title}`;$('topicHeading').textContent=lessons[i].topic;$('result').textContent='';renderQuestions();$('workArea').scrollIntoView({behavior:'smooth',block:'start'});}
+function renderQuestions(){const l=lessons[current];$('questions').innerHTML=l.qs.map((q,qi)=>`<div class="question" id="q${qi}"><div class="qnum">ആക്ടിവിറ്റി ${qi+1} / ${l.qs.length}</div><div class="prompt">${q[0]}</div><div class="options">${q.slice(1,5).map((op,oi)=>`<button class="option ${/[\u0600-\u06FF]/.test(op)?'ml':''}" onclick="choose(${qi},${oi})" id="o${qi}_${oi}">${op}</button>`).join('')}</div><div class="feedback" id="f${qi}"></div></div>`).join('');updateProgress();}
+function choose(qi,oi){
+  if(checked[qi])return;
+  answers[qi]=oi;
+  const q=lessons[current].qs[qi];
+  const feedback=$('f'+qi);
+  for(let j=0;j<4;j++){const b=$('o'+qi+'_'+j);b.classList.remove('correct','wrong');b.style.outline='none';}
+  if(oi===q[5]){
+    $('o'+qi+'_'+oi).classList.add('correct');checked[qi]=true;
+    for(let j=0;j<4;j++)$('o'+qi+'_'+j).disabled=true;
+    feedback.textContent='ശരിയാണ്! ⭐ '+q[6];feedback.className='feedback good';
+  }else{
+    $('o'+qi+'_'+oi).classList.add('wrong');$('o'+qi+'_'+q[5]).classList.add('correct');
+    feedback.textContent='തെറ്റാണ്. ചുവപ്പ് നിറത്തിലുള്ളത് തെറ്റായ ഉത്തരം; പച്ച നിറത്തിലുള്ളത് ശരിയുത്തരം. '+q[6]+' വീണ്ടും ശ്രമിക്കൂ.';
+    feedback.className='feedback bad';
+  }
+  updateProgress();
+}
+function checkAll(){let score=0;const l=lessons[current];l.qs.forEach((q,qi)=>{checked[qi]=true;for(let j=0;j<4;j++){const b=$('o'+qi+'_'+j);b.classList.remove('correct','wrong');b.style.outline='none';if(j===q[5])b.classList.add('correct');b.disabled=true;}const f=$('f'+qi);if(answers[qi]===q[5]){score++;f.textContent='ശരി! ⭐ '+q[6];f.className='feedback good';}else{f.textContent='ശരിയുത്തരം: '+q[q[5]+1]+'. '+q[6];f.className='feedback bad';if(answers[qi]!==undefined)$('o'+qi+'_'+answers[qi]).classList.add('wrong');}});$('scorePill').textContent=score+' / '+l.qs.length+' ശരി';$('result').textContent=score===l.qs.length?'മിടുക്കൻ / മിടുക്കി! എല്ലാ ഉത്തരങ്ങളും ശരിയാണ്! 🎉':`നിങ്ങൾക്ക് ${l.qs.length}ൽ ${score} ശരി. തെറ്റിയവ വീണ്ടും പഠിച്ചുനോക്കൂ!`;updateProgress();}
+function updateProgress(){const total=lessons[current].qs.length;const n=Object.keys(answers).length;$('progressBar').style.width=(n/total*100)+'%';if(!Object.keys(checked).length)$('scorePill').textContent=n+' / '+total+' തിരഞ്ഞെടുത്തു';}
+function resetLesson(){openLesson(current);}
+function nextLesson(){openLesson((current+1)%lessons.length);}
+renderLessons();
+</script>
+</body></html>
