@@ -1,1 +1,126 @@
-
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لسان القرآن — الدرس الثاني | ഓൺലൈൻ പരിശീലനം</title>
+<style>
+:root{--ink:#18354a;--teal:#176b65;--gold:#f4c95d;--paper:#f7fbfa;--green:#16833b;--red:#c62828}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(135deg,#e5f4ef,#fff8e8);font-family:Arial,"Noto Sans Malayalam",sans-serif;color:#20323d}
+header{background:linear-gradient(120deg,#125c58,#193f5b);color:white;padding:24px 16px;text-align:center;border-bottom:5px solid var(--gold)}
+header h1{font-size:clamp(1.35rem,4vw,2rem);margin:0 0 8px}
+header p{margin:0;color:#e6f4ee}
+.wrap{max-width:900px;margin:20px auto;padding:0 12px 32px}
+.stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+.stat{background:white;border:1px solid #d4e6df;border-radius:14px;padding:10px 16px;box-shadow:0 3px 10px #153d3710;font-weight:bold}
+.progress{height:10px;background:#d8e5df;border-radius:99px;overflow:hidden;margin:12px 0 20px}
+#bar{height:100%;width:0;background:linear-gradient(90deg,#23a56d,#b8d64b);transition:width .25s}
+.card{background:white;border:1px solid #d9e8e2;border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 6px 18px #163b3210}
+.qtop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.qnum{background:#e5f3ee;color:#145b53;border-radius:99px;padding:6px 11px;font-weight:bold}
+.kind{font-size:.88rem;color:#5b6d74}
+.question{font-size:1.12rem;line-height:1.8;margin:8px 0 14px}
+.ar{font-family:"Noto Naskh Arabic","Amiri",serif;font-size:1.65rem;line-height:1.9;direction:rtl;text-align:right;color:#162f43}
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:9px}
+.option{width:100%;border:2px solid #d7e4df;border-radius:12px;padding:12px 14px;background:#fbfdfc;color:#213943;cursor:pointer;text-align:center;font-size:1rem;transition:.15s;min-height:52px}
+.option .ar{font-size:1.35rem;text-align:center}
+.option:hover:not(:disabled){border-color:#23877b;background:#eff9f5}
+.option:disabled{cursor:default}
+.option.correct{background:#d9f7df;border-color:var(--green);color:#075d25}
+.option.wrong{background:#ffe0e0;border-color:var(--red);color:#9d1010}
+.feedback{min-height:28px;margin-top:12px;font-weight:bold;line-height:1.6}
+.feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}
+.light{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:7px;background:#b8c0c3;vertical-align:middle}
+.feedback.good .light{background:#19b34a;box-shadow:0 0 8px #19b34a}
+.feedback.bad .light{background:#f02e2e;box-shadow:0 0 8px #f02e2e}
+.controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:22px 0}
+button.main{border:0;border-radius:12px;padding:12px 20px;font-weight:bold;font-size:1rem;cursor:pointer;background:#176b65;color:white}
+button.alt{background:#f4c95d;color:#26333a}
+#result{display:none;text-align:center;background:white;padding:24px;border-radius:18px;border:2px solid #d9e8e2}
+footer{text-align:center;color:#5e7378;font-size:.85rem;margin-top:20px}
+@media(max-width:480px){.card{padding:14px}.question{font-size:1rem}.option{min-height:48px}.stat{padding:8px 12px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>لِسَانُ الْقُرْآنِ — الدَّرْسُ الثَّانِي</h1>
+  <p>إِلَى الْمَسْجِدِ </p>
+</header>
+<main class="wrap">
+  <div class="stats">
+    <div class="stat">ചോദ്യങ്ങൾ: <span id="total">20</span></div>
+    <div class="stat">ശരിയുത്തരങ്ങൾ: <span id="score">0</span></div>
+    <div class="stat">പൂർത്തിയാക്കിയത്: <span id="done">0</span>/20</div>
+  </div>
+  <div class="progress"><div id="bar"></div></div>
+  <div id="quiz"></div>
+  <div id="result">
+    <h2>പരിശീലനം പൂർത്തിയായി!</h2>
+    <p id="summary"></p>
+    <button class="main" onclick="resetQuiz()">വീണ്ടും പരിശീലിക്കുക</button>
+  </div>
+  <div class="controls">
+    <button class="main" onclick="checkAll()">ഉത്തരങ്ങൾ പരിശോധിക്കുക</button>
+    <button class="main alt" onclick="resetQuiz()">വീണ്ടും തുടങ്ങുക</button>
+  </div>
+  <footer>ശരിയായ ഉത്തരം ക്ലിക്ക് ചെയ്താൽ പച്ച നിറവും തെറ്റായ ഉത്തരം ക്ലിക്ക് ചെയ്താൽ ചുവപ്പ് നിറവും കാണിക്കും.</footer>
+</main>
+<script>
+const questions = [
+ {kind:"വാക്കിന്റെ അർത്ഥം",q:"يَذْهَبُ എന്നതിന്റെ അർത്ഥം ഏത്?",opts:["പോകുന്നു","കുടിക്കുന്നു","ഇരിക്കുന്നു","പറയുന്നു"],a:0},
+ {kind:"വാക്കിന്റെ അർത്ഥം",q:"يَتَوَضَّأُ എന്നതിന്റെ അർത്ഥം ഏത്?",opts:["നമസ്കരിക്കുന്നു","വുദൂഅ് ചെയ്യുന്നു","തിരിച്ചുവരുന്നു","കേൾക്കുന്നു"],a:1},
+ {kind:"വാക്കിന്റെ അർത്ഥം",q:"يَدْخُلُ എന്നതിന്റെ അർത്ഥം ഏത്?",opts:["പുറത്തുപോകുന്നു","കുടിക്കുന്നു","പ്രവേശിക്കുന്നു","കാത്തിരിക്കുന്നു"],a:2},
+ {kind:"വാക്കിന്റെ അർത്ഥം",q:"يُصَلِّي എന്നതിന്റെ അർത്ഥം ഏത്?",opts:["കേൾക്കുന്നു","നമസ്കരിക്കുന്നു","ഇരിക്കുന്നു","പോകുന്നു"],a:1},
+ {kind:"വാക്കിന്റെ അർത്ഥം",q:"يَرْجِعُ എന്നതിന്റെ അർത്ഥം ഏത്?",opts:["തിരിച്ചുവരുന്നു","കുടിക്കുന്നു","പ്രവേശിക്കുന്നു","പറയുന്നു"],a:0},
+ {kind:"വാക്കിന്റെ അർത്ഥം",q:"يَنْتَظِرُ എന്നതിന്റെ അർത്ഥം ഏത്?",opts:["കേൾക്കുന്നു","കാത്തിരിക്കുന്നു","ഇരിക്കുന്നു","നമസ്കരിക്കുന്നു"],a:1},
+ {kind:"വാക്കിന്റെ അർത്ഥം",q:"يَجْلِسُ എന്നതിന്റെ അർത്ഥം ഏത്?",opts:["ഇരിക്കുന്നു","പോകുന്നു","വുദൂഅ് ചെയ്യുന്നു","തിരിച്ചുവരുന്നു"],a:0},
+ {kind:"വാക്കിന്റെ അർത്ഥം",q:"يَشْرَبُ എന്നതിന്റെ അർത്ഥം ഏത്?",opts:["പറയുന്നു","കേൾക്കുന്നു","കുടിക്കുന്നു","പ്രവേശിക്കുന്നു"],a:2},
+ {kind:"വാക്കിന്റെ അർത്ഥം",q:"يَقُولُ എന്നതിന്റെ അർത്ഥം ഏത്?",opts:["പറയുന്നു","കാത്തിരിക്കുന്നു","നമസ്കരിക്കുന്നു","ഇരിക്കുന്നു"],a:0},
+ {kind:"ശരിയായ ക്രിയ തിരഞ്ഞെടുക്കുക",q:"........ الْوَلَدُ إِلَى الْمَسْجِدِ",opts:["يَذْهَبُ","يَشْرَبُ","يَجْلِسُ","يَقُولُ"],a:0,ar:true},
+ {kind:"ശരിയായ ക്രിയ തിരഞ്ഞെടുക്കുക",q:"........ بَاسِمٌ مِنَ الْحَوْضِ",opts:["يَرْجِعُ","يَتَوَضَّأُ","يَنْتَظِرُ","يَدْخُلُ"],a:1,ar:true},
+ {kind:"ശരിയായ ക്രിയ തിരഞ്ഞെടുക്കുക",q:"........ سَالِمٌ الْأَذَانَ",opts:["يَسْمَعُ","يَشْرَبُ","يَجْلِسُ","يَذْهَبُ"],a:0,ar:true},
+ {kind:"ശരിയായ ക്രിയ തിരഞ്ഞെടുക്കുക",q:"........ فَاطِمَةُ الشَّايَ",opts:["تَشْرَبُ","يَشْرَبُ","تَذْهَبُ","يَدْخُلُ"],a:0,ar:true},
+ {kind:"ശരിയായ ക്രിയ തിരഞ്ഞെടുക്കുക",q:"........ مَاجِدٌ صَلَاةَ الْعَصْرِ",opts:["يُصَلِّي","تُصَلِّي","يَشْرَبُ","يَقُولُ"],a:0,ar:true},
+ {kind:"ശരിയായ ക്രിയ തിരഞ്ഞെടുക്കുക",q:"تَنْتَظِرُ الْأُمُّ فِي ........",opts:["الْمَسْجِدِ","الْبَيْتِ","الْمَاءِ","الْحَوْضِ"],a:1,ar:true},
+ {kind:"വർത്തമാനകാലം തിരിച്ചറിയുക",q:"ഇവയിൽ വർത്തമാനകാല ക്രിയ ഏത്?",opts:["ذَهَبَ","ذَهَبَتْ","يَذْهَبُ","سَمِعَ"],a:2},
+ {kind:"ഭൂതകാലം തിരിച്ചറിയുക",q:"يَسْمَعُ എന്നതിന്റെ ഭൂതകാല രൂപം ഏത്?",opts:["سَمِعَ","يَسْمَعُ","تَسْمَعُ","يَقُولُ"],a:0},
+ {kind:"ഭൂതകാലം തിരിച്ചറിയുക",q:"تَذْهَبُ എന്നതിന്റെ ഭൂതകാല രൂപം ഏത്?",opts:["ذَهَبَ","ذَهَبَتْ","يَذْهَبُ","تَذْهَبُ"],a:1},
+ {kind:"വർത്തമാനകാലം തിരിച്ചറിയുക",q:"صَلَّتْ എന്നതിന്റെ വർത്തമാനകാല രൂപം ഏത്?",opts:["يُصَلِّي","تُصَلِّي","صَلَّى","قَالَ"],a:1},
+ {kind:"വാക്യം പൂർത്തിയാക്കുക",q:"مَاجِدٌ ........ الشَّايَ",opts:["يَشْرَبُ","يَتَوَضَّأُ","يَدْخُلُ","يَنْتَظِرُ"],a:0,ar:true}
+];
+const quiz=document.getElementById('quiz');let score=0,done=0;const answered=new Array(questions.length).fill(false);
+function render(){
+ quiz.innerHTML='';
+ questions.forEach((item,i)=>{
+  const card=document.createElement('section');card.className='card';card.id='qcard'+i;
+  const opts=item.opts.map((op,j)=>`<button class="option" data-i="${i}" data-j="${j}">${item.ar?`<span class="ar" dir="rtl">${op}</span>`:op}</button>`).join('');
+  card.innerHTML=`<div class="qtop"><span class="qnum">ചോദ്യം ${i+1}</span><span class="kind">${item.kind}</span></div><div class="question ${item.ar?'ar':''}" ${item.ar?'dir="rtl"':''}>${item.q}</div><div class="options">${opts}</div><div class="feedback" id="fb${i}"><span class="light"></span>ഉത്തരം തിരഞ്ഞെടുക്കുക</div>`;
+  quiz.appendChild(card);
+ });
+ quiz.querySelectorAll('.option').forEach(btn=>btn.addEventListener('click',()=>choose(+btn.dataset.i,+btn.dataset.j)));
+}
+function choose(i,j){
+ if(answered[i])return;
+ const item=questions[i],card=document.getElementById('qcard'+i),buttons=card.querySelectorAll('.option'),fb=document.getElementById('fb'+i);
+ answered[i]=true;done++;
+ buttons.forEach((b,k)=>{b.disabled=true;if(k===item.a)b.classList.add('correct');});
+ if(j===item.a){score++;fb.className='feedback good';fb.innerHTML='<span class="light"></span>ശരിയുത്തരം! വളരെ നന്ന്.';}
+ else{buttons[j].classList.add('wrong');fb.className='feedback bad';fb.innerHTML=`<span class="light"></span>തെറ്റായ ഉത്തരം. ശരിയായ ഉത്തരം: ${item.opts[item.a]}`;}
+ update();
+}
+function update(){
+ document.getElementById('score').textContent=score;document.getElementById('done').textContent=done;
+ document.getElementById('bar').style.width=(done/questions.length*100)+'%';
+ if(done===questions.length){document.getElementById('result').style.display='block';document.getElementById('summary').textContent=`20 ചോദ്യങ്ങളിൽ ${score} ശരി. ${Math.round(score/questions.length*100)}% മാർക്ക്.`;}
+}
+function checkAll(){
+ const first=answered.findIndex(v=>!v);
+ if(first!==-1){document.getElementById('qcard'+first).scrollIntoView({behavior:'smooth',block:'center'});}
+ else{document.getElementById('result').scrollIntoView({behavior:'smooth',block:'center'});}
+}
+function resetQuiz(){score=0;done=0;answered.fill(false);document.getElementById('result').style.display='none';render();update();window.scrollTo({top:0,behavior:'smooth'});}
+render();
+</script>
+</body>
+</html>
