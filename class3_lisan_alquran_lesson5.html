@@ -1,1 +1,128 @@
-
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لسان القرآن – الدرس الخامس: زيارة الجد</title>
+<style>
+:root{--ink:#203047;--blue:#263d73;--pink:#c93667;--paper:#fffdf8;--green:#16834a;--red:#c83434;--gold:#f5d76e}
+*{box-sizing:border-box}
+body{margin:0;background:#f0f3f8;color:var(--ink);font-family:Arial,"Noto Sans Malayalam",sans-serif;line-height:1.6}
+header{background:linear-gradient(135deg,#273d73,#455d9a);color:white;text-align:center;padding:24px 14px 20px}
+header .small{font-size:14px;opacity:.9}
+h1{font-size:clamp(24px,5vw,36px);margin:5px 0}
+header p{margin:4px 0 0}
+.wrap{max-width:900px;margin:18px auto;padding:0 12px 28px}
+.panel{background:white;border-radius:18px;padding:16px;margin:14px 0;box-shadow:0 4px 15px #20304712}
+.progress-line{height:10px;background:#e8edf5;border-radius:99px;overflow:hidden;margin:10px 0}
+#progress{height:100%;width:0;background:linear-gradient(90deg,#1c9c65,#72c99a);transition:width .25s}
+.stats{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-weight:bold}
+.qnum{color:var(--pink);font-weight:bold}
+.question{font-size:19px;font-weight:bold;margin:8px 0 12px}
+.arabic{font-family:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif;font-size:25px;line-height:1.9;direction:rtl;text-align:right}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.option{border:2px solid #dce3ef;border-radius:12px;background:#fff;padding:12px 10px;font-size:17px;cursor:pointer;text-align:center;min-height:50px;transition:.15s}
+.option:hover{border-color:#7188c5;background:#f7f9ff}
+.option:disabled{cursor:default}
+.option.correct{background:#d8f7e5;border-color:var(--green);color:#075b31}
+.option.wrong{background:#ffe0e0;border-color:var(--red);color:#8e1717}
+.feedback{display:none;margin-top:12px;padding:10px 12px;border-radius:10px;font-weight:bold}
+.feedback.show{display:block}
+.feedback.good{background:#e0f8e9;color:#075b31}
+.feedback.bad{background:#fff0f0;color:#8e1717}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+button.main{border:0;border-radius:12px;padding:12px 18px;background:var(--blue);color:#fff;font-size:16px;font-weight:bold;cursor:pointer}
+button.alt{background:#e9edf6;color:#263d73}
+button:disabled{opacity:.45;cursor:default}
+#finish{display:none;text-align:center}
+#finish h2{color:var(--green)}
+.note{font-size:14px;color:#59677a}
+@media(max-width:560px){.options{grid-template-columns:1fr}.panel{padding:13px}.question{font-size:17px}.arabic{font-size:23px}}
+</style>
+</head>
+<body>
+<header>
+<div class="small">لسان القرآن • الصف الثالث</div>
+<h1>الدَّرْسُ الْخَامِسُ</h1>
+<div class="arabic" style="text-align:center;font-size:30px">زِيَارَةُ الْجَدِّ</div>
+<p></p>
+</header>
+<main class="wrap">
+<section class="panel">
+<div class="stats"><span id="counter">ചോദ്യം 1 / 20</span><span>ശരിയായ ഉത്തരം: <span id="score">0</span></span></div>
+<div class="progress-line"><div id="progress"></div></div>
+<div class="note">ശരിയായ ഉത്തരം പച്ച നിറത്തിലും തെറ്റായ ഉത്തരം ചുവപ്പ് നിറത്തിലും കാണിക്കും.</div>
+</section>
+<section class="panel" id="quiz">
+<div class="qnum" id="qnum">ചോദ്യം 1</div>
+<div class="question" id="question"></div>
+<div class="arabic" id="arabic"></div>
+<div class="options" id="options"></div>
+<div class="feedback" id="feedback" aria-live="polite"></div>
+<div class="actions"><button class="main" id="next" disabled>അടുത്ത ചോദ്യം →</button><button class="main alt" id="retry">വീണ്ടും ശ്രമിക്കുക</button></div>
+</section>
+<section class="panel" id="finish">
+<h2>പരിശീലനം പൂർത്തിയായി!</h2>
+<p id="finalscore"></p>
+<p id="remark"></p>
+<div class="actions" style="justify-content:center"><button class="main" id="again">വീണ്ടും ചെയ്യാം</button></div>
+</section>
+</main>
+<script>
+const questions = [
+{q:"ഈ പാഠത്തിന്റെ പേര് ഏതാണ്?",a:"زِيَارَةُ الْجَدِّ",opts:["زِيَارَةُ الْجَدِّ","فِكْرَةٌ رَائِعَةٌ","يَوْمُ السَّبْتِ","إِطْعَامُ الطُّيُورِ"],correct:0},
+{q:"നബീൽ എന്താണ് നോക്കിക്കൊണ്ടിരുന്നത്?",a:"كَانَ نَبِيلٌ يَنْظُرُ إِلَى الْتَّقْوِيمِ",opts:["പുസ്തകം","കലണ്ടർ","പന്ത്","സ്കൂൾ"],correct:1},
+{q:"നബീലിനോട് അച്ഛൻ ആദ്യം എന്താണ് പറഞ്ഞത്?",a:"السَّلَامُ عَلَيْكُمْ",opts:["مَعَ السَّلَامَةِ","السَّلَامُ عَلَيْكُمْ","شُكْرًا","صَبَاحُ الْخَيْرِ"],correct:1},
+{q:"നബീൽ ഏത് ദിവസമാണ് പെരുന്നാൾ എന്ന് പറയുന്നു?",a:"الْعِيدُ فِي يَوْمِ الْأَحَدِ",opts:["الْأَحَدِ","الْإِثْنَيْنِ","الْجُمُعَةِ","السَّبْتِ"],correct:0},
+{q:"അവർ മുത്തച്ഛനെ കാണാൻ പോകുന്നത് ഏത് ദിവസം?",a:"نَذْهَبُ لِزِيَارَةِ جَدِّكُمْ",opts:["يَوْمُ الْأَحَدِ","يَوْمُ الْإِثْنَيْنِ","يَوْمُ الْجُمُعَةِ","يَوْمُ السَّبْتِ"],correct:1},
+{q:"നബീലിന്റെ സഹോദരിയുടെ പേര് എന്താണ്?",a:"أَيْنَ أُخْتُكَ رَحِيمَةُ؟",opts:["فَاطِمَةُ","رَحِيمَةُ","عَائِشَةُ","خَدِيجَةُ"],correct:1},
+{q:"‘ഞാനും ഇവിടെ ഉണ്ട്, ബാപ്പാ’ എന്നതിന്റെ അറബി ഏതാണ്?",a:"أَنَا حَاضِرَةٌ يَا بَابَا",opts:["أَنَا حَاضِرَةٌ يَا بَابَا","أَيْنَ أُمُّكِ؟","نَحْنُ طُلَّابٌ","أَنَا طَالِبٌ"],correct:0},
+{q:"അമ്മ എന്താണ് പറയുന്നത്?",a:"أَنَا أَيْضًا حَاضِرَةٌ",opts:["أَنَا أَيْضًا حَاضِرَةٌ","أَنَا طَالِبٌ","هُوَ غَائِبٌ","أَيْنَ كِتَابُكَ؟"],correct:0},
+{q:"അവർ മുത്തച്ഛനോടൊപ്പം ഏത് ദിവസങ്ങളിൽ താമസിക്കും?",a:"يَوْمُ الثُّلَاثَاءِ وَيَوْمُ الْأَرْبِعَاءِ وَيَوْمُ الْخَمِيسِ",opts:["الأحد والاثنين","الثلاثاء والأربعاء والخميس","الجمعة والسبت","الاثنين والجمعة"],correct:1},
+{q:"അവർ തിരിച്ചു വരുന്നത് ഏത് ദിവസം?",a:"نَرْجِعُ فِي يَوْمِ الْجُمُعَةِ",opts:["الأربعاء","الخميس","الجمعة","الأحد"],correct:2},
+{q:"പെരുന്നാളിന് ശേഷം സ്കൂൾ തുറക്കുന്നത് ഏത് ദിവസം?",a:"فِي يَوْمِ السَّبْتِ",opts:["السبت","الأحد","الثلاثاء","الخميس"],correct:0},
+{q:"‘ഞങ്ങൾ’ എന്നതിന്റെ അറബി ഏതാണ്?",a:"نَحْنُ",opts:["أَنَا","أَنْتَ","أَنْتُمْ","نَحْنُ"],correct:3},
+{q:"‘നിങ്ങൾ (ആൺകുട്ടികൾ)’ എന്നതിന് ശരിയായ അറബി ഏതാണ്?",a:"أَنْتُمْ",opts:["أَنْتِ","أَنْتُمْ","أَنَا","نَحْنُ"],correct:1},
+{q:"‘ഞാൻ ഒരു വിദ്യാർത്ഥിയാണ്’ (ആൺകുട്ടി) എന്നത് ഏതാണ്?",a:"أَنَا طَالِبٌ",opts:["أَنَا طَالِبٌ","أَنَا طَالِبَةٌ","أَنْتَ دَارِسٌ","نَحْنُ طُلَّابٌ"],correct:0},
+{q:"‘ഞാൻ ഒരു വിദ്യാർത്ഥിനിയാണ്’ എന്നത് ഏതാണ്?",a:"أَنَا طَالِبَةٌ",opts:["أَنَا طَالِبٌ","أَنَا طَالِبَةٌ","أَنْتُمْ دَارِسُونَ","نَحْنُ طُلَّابٌ"],correct:1},
+{q:"‘നിന്റെ മുത്തച്ഛൻ’ (ഒരു ആൺകുട്ടിയോട്) എന്നത് ഏതാണ്?",a:"جَدُّكَ",opts:["جَدُّكِ","جَدُّكَ","جَدُّكُمْ","جَدِّي"],correct:1},
+{q:"‘നിങ്ങളുടെ പുസ്തകം’ (കൂട്ടത്തോട്) എന്നത് ഏതാണ്?",a:"كِتَابُكُمْ",opts:["كِتَابِي","كِتَابُكِ","كِتَابُكَ","كِتَابُكُمْ"],correct:3},
+{q:"‘എവിടെ’ എന്ന അർത്ഥമുള്ള ചോദ്യം ഏതാണ്?",a:"أَيْنَ",opts:["مَاذَا","مَنْ","أَيْنَ","كَيْفَ"],correct:2},
+{q:"‘ആര്’ എന്ന അർത്ഥമുള്ള ചോദ്യം ഏതാണ്?",a:"مَنْ",opts:["هَلْ","مَنْ","مَا","أَيْنَ"],correct:1},
+{q:"‘നിങ്ങൾ വെള്ളിയാഴ്ച മടങ്ങിവരുന്നു’ എന്ന വാക്യത്തിൽ വെള്ളിയാഴ്ച ഏതാണ്?",a:"يَوْمُ الْجُمُعَةِ",opts:["يَوْمُ الثُّلَاثَاءِ","يَوْمُ الْخَمِيسِ","يَوْمُ الْجُمُعَةِ","يَوْمُ السَّبْتِ"],correct:2}
+];
+let index=0, score=0, answered=false;
+const $=id=>document.getElementById(id);
+function render(){
+ if(index>=questions.length){$("quiz").style.display="none";$("finish").style.display="block";$("finalscore").textContent=`നിങ്ങളുടെ സ്കോർ: ${score} / ${questions.length}`;$("remark").textContent=score>=16?"വളരെ നന്നായി!":"നന്നായി ശ്രമിച്ചു. വീണ്ടും പരിശീലിക്കൂ.";return;}
+ const item=questions[index];answered=false;
+ $("counter").textContent=`ചോദ്യം ${index+1} / ${questions.length}`;
+ $("qnum").textContent=`ചോദ്യം ${index+1}`;
+ $("question").textContent=item.q;
+ $("arabic").textContent=item.a;
+ $("score").textContent=score;
+ $("progress").style.width=`${index/questions.length*100}%`;
+ $("feedback").className="feedback";$("feedback").textContent="";
+ $("next").disabled=true;$("next").textContent=index===questions.length-1?"ഫലം കാണുക":"അടുത്ത ചോദ്യം →";
+ $("options").innerHTML="";
+ item.opts.forEach((opt,i)=>{
+  const b=document.createElement("button");b.className="option";b.textContent=opt;
+  if(/[ء-ي]/.test(opt)) {b.classList.add("arabic"); b.style.fontSize="23px";}
+  b.onclick=()=>choose(i,b);$("options").appendChild(b);
+ });
+}
+function choose(i,button){
+ if(answered)return;answered=true;
+ const item=questions[index];const buttons=[...$("options").children];
+ buttons.forEach((b,j)=>{b.disabled=true;if(j===item.correct)b.classList.add("correct");});
+ const fb=$("feedback");fb.classList.add("show");
+ if(i===item.correct){score++;button.classList.add("correct");fb.classList.add("good");fb.textContent="ശരിയാണ്! ✓";}else{button.classList.add("wrong");fb.classList.add("bad");fb.textContent="തെറ്റി. ശരിയായ ഉത്തരം: "+item.opts[item.correct];}
+ $("score").textContent=score;$("next").disabled=false;
+}
+$("next").onclick=()=>{if(!answered)return;index++;render();};
+$("retry").onclick=()=>{if(answered){render();}else{$("feedback").className="feedback";$("feedback").textContent="ഒരു ഉത്തരം തിരഞ്ഞെടുക്കൂ."; $("feedback").classList.add("show");}};
+$("again").onclick=()=>{index=0;score=0;$("finish").style.display="none";$("quiz").style.display="block";render();};
+render();
+</script>
+</body>
+</html>
